@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_request_form" model="ir.ui.view">
+        <field name="name">purchase.request.form</field>
+        <field name="model">purchase.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+
+                    <button name="action_submit_for_approval" string="Submit for Approval" invisible="state != 'draft'" type="object" class="oe_highlight"/>
+                    <button name="action_cancel" string="Cancel" invisible="state != 'draft'"  type="object" />
+                    <button name="action_approve" string="Approve" invisible="state != 'to_approve'"  type="object" class="oe_highlight"/>
+                    <button name="action_reject" string="Reject" invisible="state != 'to_approve'"  type="object"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" invisible="state in ['to_approve', 'approve', 'reject','draft']"  type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="1" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly ="state != 'draft'"/>
+                            <field name="requested_by" readonly ="state != 'draft'" />
+                        </group>
+                        <group>
+                            <field name="start_date" readonly ="state != 'draft'"/>
+                            <field name="end_date" readonly ="state != 'draft'" />
+                            <field name="rejection_reason" invisible="state!='reject'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Lines">
+                            <field name="order_line_ids" readonly = "state == 'reject'">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="cost_price"/>
+                                    <field name="total"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total_price" widget="monetary"/>
+                    </group>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_purchase_request_tree" model="ir.ui.view">
+        <field name="name">purchase.request.tree</field>
+        <field name="model">purchase.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="requested_by"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="total_price"/>
+                <field name="state"/>
+                <field name="order_line_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_purchase_request" model="ir.actions.act_window">
+        <field name="name">Purchase Requests</field>
+        <field name="res_model">purchase.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_purchase_request"
+              name="Purchase Requests"
+              action="action_purchase_request"
+              parent="purchase.menu_procurement_management"
+              sequence="5"/>
+
+</odoo>
