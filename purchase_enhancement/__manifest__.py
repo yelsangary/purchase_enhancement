@@ -1,12 +1,16 @@
 {
     'name': 'Purchase Enhancement',
     'author': 'Youssef',
-    'depends': ['base', 'purchase', 'mail' ],
+    'depends': ['base', 'purchase', 'mail', 'sale', 'product', 'stock' ],
     'data': [
         'security/ir.model.access.csv',
         'security/groups.xml',
         'views/purchase_request.xml',
         'views/rejection_wizard.xml',
+        'views/sale_order_line.xml',
+        'views/product_template.xml',
+        'views/stock_move.xml',
+        'views/account_invoice_line.xml'
         # 'data/email_templates.xml'
     ],
     'demo': [],
