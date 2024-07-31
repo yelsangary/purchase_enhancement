@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit" model="ir.ui.view">
+            <field name="name">view.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//form/header/button[@name='action_confirm']"
+                       position="after">
+                    <button name="action_approval_first_level"
+                            string="Approve Level 1"
+                            type="object"
+                            groups="purchase_enhancement.first_approval_group"/>
+
+                    <button name="action_approval_second_level"
+                            string="Approve Level 2"
+                            type="object"
+                            invisible="state != 'awaiting_second_approval'"
+                            groups="purchase_enhancement.second_approval_group"/>
+
+                    <xpath expr="//button[@name='action_confirm' and not(@id)]" position="attributes">
+                    </xpath>
+                    <xpath expr="//button[@name='action_quotation_send']" position="after">
+                        <button name="action_approval_third_level"
+                                string="Approve Level 3"
+                                type="object"
+                                context="{'validate_analytic': True}"
+                                invisible="state != 'awaiting_third_approval'"
+                                groups="purchase_enhancement.third_approval_group"/>
+                    </xpath>
+
+                </xpath>
+
+                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='discount']"
+                       position="after">
+                    <field name="dimension"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
